@@ -1,0 +1,41 @@
+---
+title: background-image
+slug: Web/CSS/background-image
+tags:
+  - CSS
+  - CSS Background
+  - CSS Property
+  - Reference
+  - 'recipe:css-property'
+translation_of: Web/CSS/background-image
+---
+<p>{{CSSRef}}</p><p><strong><code>background-image</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a>プロパティは、要素に1つ以上の背景画像を設定します。 </p><div>{{EmbedInteractiveExample("pages/css/background-image.html")}}</div><div class="hidden">このインタラクティブな例のソースは、GitHubリポジトリに保存されています。インタラクティブなサンプルプロジェクトに貢献したい場合は、 <a href="https://github.com/mdn/interactive-examples">https：//github.com/mdn/interactive-examplesの</a>クローンを作成して、プルリクエストを送信してください。</div><p>背景画像は、コンテキストレイヤーを積み重ねて描画されます。指定された最初のレイヤーは、ユーザーに最も近いかのように描画されます。</p><p>次に、要素の<a href="/en-US/docs/Web/CSS/border">境界線</a>がそれらの上に描画され、{{cssxref("background-color")}}それらの下に描かれています。ボックスとその境界線に対して画像がどのように描画されるかは、{{cssxref("background-clip")}}そして{{cssxref("background-origin")}}CSSプロパティ。</p><p>指定された画像を描画できない場合（たとえば、指定されたURIで示されるファイルをロードできない場合）、ブラウザーはそれを<code>none</code>値と同じように処理します。</p><div class="note"><strong>注：</strong>画像が不透明で、通常の状況では色が表示されない場合でも、Web開発者は常に{{cssxref("background-color")}}。ネットワークがダウンしている場合など、画像を読み込めない場合は、背景色がフォールバックとして使用されます。</div><h2 id="Syntax">構文</h2><p>各背景画像は、キーワード<code><a href="#none">none</a></code>またはとして指定されます。{{cssxref("&lt;image&gt;")}}値。</p><p>複数の背景画像を指定するには、カンマで区切って複数の値を指定します。 </p><pre class="brush: css no-line-numbers notranslate">background-image:
+  linear-gradient(to bottom, rgba(255,255,0,0.5), rgba(0,0,255,0.5)),
+  url('https://mdn.mozillademos.org/files/7693/catfront.png');</pre><h3 id="Values">値</h3><dl><dt id="none"><code>none</code></dt><dd>画像がないことを示すキーワードです。</dd><dt id="image"> <code>&lt;image&gt;</code></dt><dd>です{{cssxref("&lt;image&gt;")}}表示する画像を示します。<a href="/en-US/docs/Web/Guide/CSS/Using_multiple_backgrounds">複数の背景</a>がサポートされているため、コンマで区切って<a href="/en-US/docs/Web/Guide/CSS/Using_multiple_backgrounds">複数</a>存在することができます。</dd></dl><h2 id="Accessibility_concerns">アクセシビリティの懸念</h2><p>ブラウザは、支援技術に背景画像に関する特別な情報を提供しません。スクリーンリーダーはその存在をアナウンスせず、したがってユーザーに何も伝えないため、これは主にスクリーンリーダーにとって重要です。画像にページの全体的な目的を理解するために重要な情報が含まれている場合は、ドキュメントで意味的に説明することをお勧めします。</p><ul><li> <a href="/en-US/docs/Web/Accessibility/Understanding_WCAG/Perceivable#Guideline_1.1_%E2%80%94_Providing_text_alternatives_for_non-text_content">MDN WCAGの理解、ガイドライン1.1の説明</a></li><li><a href="https://www.w3.org/TR/2016/NOTE-UNDERSTANDING-WCAG20-20161007/text-equiv-all.html">成功基準を理解する1.1.1 | W3C WCAG2.0を理解する</a></li></ul><h2 id="Formal_definition">正式な定義</h2><p>{{cssinfo}}</p><h2 id="Formal_syntax">正式な構文</h2><pre class="syntaxbox notranslate">{{csssyntax}}</pre><h2 id="Examples">例</h2><h3 id="Layering_background_images">背景画像を重ねる</h3><p>星の画像は部分的に透明で、猫の画像の上に重ねられていることに注意してください。</p><h4 id="HTML"> HTML </h4><pre class="brush: html notranslate">&lt;div&gt;
+  &lt;p class="catsandstars"&gt;
+    This paragraph is full of cats&lt;br /&gt;and stars.
+  &lt;/p&gt;
+  &lt;p&gt;This paragraph is not.&lt;/p&gt;
+  &lt;p class="catsandstars"&gt;
+    Here are more cats for you.&lt;br /&gt;Look at them!
+  &lt;/p&gt;
+  &lt;p&gt;And no more.&lt;/p&gt;
+&lt;/div&gt;</pre><h4 id="CSS"> CSS </h4><pre class="brush: css notranslate">p {
+  font-size: 1.5em;
+  color: #FE7F88;
+  background-image: none;
+  background-color: transparent;
+}
+
+div {
+  background-image:
+      url("https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png");
+}
+
+.catsandstars {
+  background-image:
+      url("https://mdn.mozillademos.org/files/11991/startransparent.gif"),
+      url("https://mdn.mozillademos.org/files/7693/catfront.png");
+  background-color: transparent;
+}
+</pre><h4 id="Result">結果</h4><p>{{EmbedLiveSample('Layering_background_images')}}</p><h2 id="Specifications">仕様</h2><table class="standard-table"><thead><tr><th scope="col">仕様</th><th scope="col">状態</th><th scope="col">コメント</th></tr></thead><tbody><tr><td>{{SpecName('CSS3 Backgrounds', '#background-image', 'background-image')}}</td><td>{{Spec2('CSS3 Backgrounds')}}</td><td> CSS2リビジョン1から、プロパティが拡張され、複数の背景と{{cssxref("&lt;image&gt;")}}CSSデータ型。 </td></tr><tr><td>{{SpecName('CSS2.1', 'colors.html#propdef-background-image', 'background-image')}}</td><td>{{Spec2('CSS2.1')}}</td><td> CSS1から、内在次元がある場合とない場合の画像の処理方法について説明します。 </td></tr><tr><td>{{SpecName('CSS1', '#background-image', 'background-image')}}</td><td>{{Spec2('CSS1')}}</td><td>初期定義。</td></tr></tbody></table><h2 id="Browser_compatibility">ブラウザの互換性</h2><div>{{Compat("css.properties.background-image")}}</div><h2 id="See_also">も参照してください</h2><ul><li><a href="/en-US/docs/Web/Guide/CSS/CSS_Image_Sprites">CSSでの画像スプライトの実装</a></li><li>{{HTMLElement("img")}}</li><li>画像関連のデータ型：{{cssxref("&lt;image&gt;")}} 、{{cssxref("&lt;gradient&gt;")}}</li><li>画像関連機能： <ul><li>{{cssxref("cross-fade")}}</li><li>{{cssxref("element")}}</li><li>{{cssxref("imagefunction", "image()")}}</li><li>{{cssxref("image-set")}}</li><li>{{cssxref("linear-gradient")}}</li><li>{{cssxref("radial-gradient")}}</li><li>{{cssxref("repeating-linear-gradient")}}</li><li>{{cssxref("repeating-radial-gradient")}}</li><li>{{cssxref("paint")}}</li><li>{{cssxref("url", "url()")}}</li></ul></li></ul>

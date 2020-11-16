@@ -1,0 +1,57 @@
+---
+title: WindowOrWorkerGlobalScope.fetch()
+slug: Web/API/WindowOrWorkerGlobalScope/fetch
+tags:
+  - API
+  - Experimental
+  - Fetch
+  - Fetch API
+  - GlobalFetch
+  - Method
+  - Reference
+  - WindowOrWorkerGlobalScope
+  - request
+translation_of: Web/API/WindowOrWorkerGlobalScope/fetch
+---
+<p>{{APIRef("Fetch API")}}</p><p><span class="seoSummary">的<code><strong>fetch()</strong></code>方法</span>{{domxref("WindowOrWorkerGlobalScope")}}<span class="seoSummary">mixin開始從網絡中獲取資源的過程，返回一個在響應可用後就兌現的承諾。</span>諾言化為{{domxref("Response")}}代表對您請求的響應的對象。 Promise<em>不會</em>拒絕HTTP錯誤，而只會拒絕網絡錯誤。您必須使用<code>then</code>處理程序來檢查HTTP錯誤。</p><p> <code>WindowOrWorkerGlobalScope</code>由以下兩者實現{{domxref("Window")}}和{{domxref("WorkerGlobalScope")}}，這意味著<code>fetch()</code>方法幾乎可以在您想要獲取資源的任何上下文中使用。</p><p>一種{{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}}僅當遇到網絡錯誤時（通常是在權限問題或類似情況下），promise才會拒絕。一種{{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}}promise<em>不會</em>拒絕HTTP錯誤（ <code>404</code>等）。相反， <code>then()</code>處理函數必須檢查{{domxref("Response.ok")}}和/或{{domxref("Response.status")}}屬性。</p><p> <code>fetch()</code>方法由“<a href="/en-US/docs/Security/CSP/CSP_policy_directives">內容安全策略”</a>的<code>connect-src</code>指令而不是其正在檢索的資源的指令控制。</p><div class="note"><p><strong>注意</strong>： <code>fetch()</code>方法的參數與{{domxref("Request.Request","Request()")}}構造函數。</p></div><h2 id="Syntax">句法</h2><pre class="syntaxbox notranslate">const <var>fetchResponsePromise</var> = fetch( <var>resource</var> [, <var>init</var> ])
+</pre><h3 id="Parameters">參量</h3><dl><dt><code><var>resource</var></code></dt><dd>這定義了您希望獲取的資源。可以是：<ul><li>一種{{domxref("USVString")}}包含您要獲取的資源的直接URL。一些瀏覽器接受<code>blob:</code>和<code>data:</code>方案。</li><li>一種{{domxref("Request")}}目的。</li></ul></dd><dt> <code><var>init</var></code>{{optional_inline}}</dt><dd><p>包含要應用於請求的任何自定義設置的對象。可能的選項是：</p><dl><dt> <code>method</code></dt><dd>請求方法，例如<code>GET</code> ， <code>POST</code> 。請注意{{httpheader("Origin")}}未使用的方法在Fetch請求上設置標頭{{HTTPMethod("HEAD")}}要么{{HTTPMethod("GET")}}。<br> （此行為已在Firefox 65中得到糾正-請參閱{{bug(1508661)}}）。</dd><dt> <code>headers</code></dt><dd>您要添加到請求中的所有標頭，包含在{{domxref("Headers")}}對像或帶有{{domxref("ByteString")}}價值觀。請注意，<a href="/en-US/docs/Glossary/Forbidden_header_name">禁止使用某些名稱</a>。</dd><dt> <code>body</code></dt><dd>您要添加到請求中的任何正文：這可以是{{domxref("Blob")}}，{{domxref("BufferSource")}} ，{{domxref("FormData")}} ，{{domxref("URLSearchParams")}} ，{{domxref("USVString")}} ， 要么{{domxref("ReadableStream")}}目的。請注意，使用<code>GET</code>或<code>HEAD</code>方法的請求不能具有主體。</dd><dt> <code>mode</code></dt><dd>您要用於請求的模式，例如<code>cors</code> ， <code>no-cors</code>或<code>same-origin</code> 。</dd><dt> <code>credentials</code></dt><dd>您要用於請求的請求憑據： <code>omit</code> ， <code>same-origin</code>或<code>include</code> 。要自動發送當前域的cookie，必須提供此選項。從Chrome 50開始，此屬性還需要{{domxref("FederatedCredential")}}實例或{{domxref("PasswordCredential")}}實例。</dd><dt> <code>cache</code></dt><dd>您要用於請求的<a href="/en-US/docs/Web/API/Request/cache">緩存模式</a>。</dd><dt> <code>redirect</code></dt><dd>要使用的重定向模式： <code>follow</code> （自動跟隨重定向）， <code>error</code> （如果發生重定向，則中止並顯示錯誤）或<code>manual</code> （手動處理重定向）。在Chrome中，默認設置為<code>follow</code> （在Chrome 47之前，默認設置為<code>manual</code> ）。</dd><dt> <code>referrer</code></dt><dd>一種{{domxref("USVString")}}指定請求的引薦來源。這可以是同源網址， <code>about:client</code>或空字符串。</dd><dt> <code>referrerPolicy</code></dt><dd>指定用於請求的<a href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policies">引用者策略</a>。可以是<code>no-referrer</code> ， <code>no-referrer-when-downgrade</code> ， <code>same-origin</code> ， <code>origin</code> ， <code>strict-origin</code> ， <code>origin-when-cross-origin</code> ， <code>strict-origin-when-cross-origin</code> <code>origin-when-cross-origin</code> ， <code>strict-origin-when-cross-origin</code>時或<code>unsafe-url</code> 。</dd><dt> <code>integrity</code></dt><dd>包含請求的<a href="/en-US/docs/Web/Security/Subresource_Integrity">子資源完整性</a>值（例如， <code>sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=</code> ）。</dd><dt> <code>keepalive</code></dt><dd> <code>keepalive</code>選項可用於允許請求超過頁面壽命。使用<code>keepalive</code>標誌進行取回可替換{{domxref("Navigator.sendBeacon()")}}API。</dd><dt> <code>signal</code></dt><dd>一個{{domxref("AbortSignal")}}對象實例；允許您與獲取請求進行通信，並根據需要中止請求{{domxref("AbortController")}}。</dd></dl></dd></dl><h3 id="Return_value">返回值</h3><p>一種{{domxref("Promise")}}解析為{{domxref("Response")}}目的。</p><h3 id="Exceptions">例外情況</h3><dl><dt><code>AbortError</code></dt><dd>由於調用了，該請求已中止。{{domxref("AbortController")}}方法{{domxref("AbortController.abort", "abort()")}}方法。</dd><dt> <code>TypeError</code></dt><dd>指定的URL字符串包括用戶憑據。而是應使用{{HTTPHeader("Authorization")}}標頭。</dd></dl><h2 id="Examples">例子</h2><p>在我們的<a href="https://github.com/mdn/fetch-examples/tree/master/fetch-request">提取請求示例</a>（請參閱<a href="https://mdn.github.io/fetch-examples/fetch-request/">實時提取請求</a>）中，我們創建了一個新的{{domxref("Request")}}使用相關構造函數的對象，然後使用<code>fetch()</code>調用來獲取它。由於我們正在獲取圖像，因此我們運行{{domxref("Body.blob()")}}在響應中為其提供正確的MIME類型，以便對其進行正確處理，然後為其創建對象URL並將其顯示在{{htmlelement("img")}}元件。 </p><pre class="brush: js notranslate">const myImage = document.querySelector('img');
+
+let myRequest = new Request('flowers.jpg');
+
+fetch(myRequest)
+.then(function(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.blob();
+})
+.then(function(response) {
+  let objectURL = URL.createObjectURL(response);
+  myImage.src = objectURL;
+});</pre><p><a href="https://github.com/mdn/fetch-examples/blob/master/fetch-with-init-then-request/index.html">在先有先取然後請求</a>的<a href="https://github.com/mdn/fetch-examples/blob/master/fetch-with-init-then-request/index.html">獲取示例中</a>（請參見先後<a href="https://mdn.github.io/fetch-examples/fetch-with-init-then-request/">獲取請求init live</a> ），我們做同樣的事情，除了在調用<code>fetch()</code>時傳遞<code><var>init</var></code>對象： </p><pre class="brush: js notranslate">const myImage = document.querySelector('img');
+
+let myHeaders = new Headers();
+myHeaders.append('Content-Type', 'image/jpeg');
+
+const myInit = {
+  method: 'GET',
+  headers: myHeaders,
+  mode: 'cors',
+  cache: 'default'
+};
+
+let myRequest = new Request('flowers.jpg');
+
+fetch(myRequest, myInit).then(function(response) {
+  // ...
+});</pre><p>您還可以將<code><var>init</var></code>對象與<code>Request</code>構造函數一起傳遞，以達到相同的效果： </p><pre class="brush: js notranslate">let myRequest = new Request('flowers.jpg', myInit);</pre><p>您還可以在<code><var>init</var></code>中將對象文字用作<code>headers</code> 。 </p><pre class="brush: js notranslate">const myInit = {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'image/jpeg'
+  },
+  mode: 'cors',
+  cache: 'default'
+};
+
+let myRequest = new Request('flowers.jpg', myInit);
+</pre><h2 id="Specifications">技術指標</h2><table class="standard-table"><thead><tr><th scope="col">規範</th><th scope="col">狀態</th><th scope="col">評論</th></tr></thead><tbody><tr><td>{{SpecName('Fetch','#fetch-method','fetch()')}}</td><td>{{Spec2('Fetch')}}</td><td>在最新規範的<code>WindowOrWorkerGlobalScope</code>部分中定義。 </td></tr><tr><td>{{SpecName('Fetch','#dom-global-fetch','fetch()')}}</td><td>{{Spec2('Fetch')}}</td><td>初始定義</td></tr><tr><td>{{SpecName('Credential Management')}}</td><td>{{Spec2('Credential Management')}}</td><td>新增{{domxref("FederatedCredential")}}要么{{domxref("PasswordCredential")}}實例，作為<code>init.credentials</code>的可能值。</td></tr></tbody></table><h2 id="Browser_compatibility">瀏覽器兼容性</h2><p>{{Compat("api.WindowOrWorkerGlobalScope.fetch")}}</p><h2 id="See_also">也可以看看</h2><ul><li><a href="/en-US/docs/Web/API/Fetch_API">提取API</a></li><li> <a href="/en-US/docs/Web/API/ServiceWorker_API">ServiceWorker API</a></li><li> <a href="/en-US/docs/Web/HTTP/CORS">HTTP訪問控制（CORS）</a></li><li> <a href="/en-US/docs/Web/HTTP">HTTP</a></li></ul>

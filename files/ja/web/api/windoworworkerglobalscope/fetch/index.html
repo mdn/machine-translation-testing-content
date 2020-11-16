@@ -1,0 +1,57 @@
+---
+title: WindowOrWorkerGlobalScope.fetch()
+slug: Web/API/WindowOrWorkerGlobalScope/fetch
+tags:
+  - API
+  - Experimental
+  - Fetch
+  - Fetch API
+  - GlobalFetch
+  - Method
+  - Reference
+  - WindowOrWorkerGlobalScope
+  - request
+translation_of: Web/API/WindowOrWorkerGlobalScope/fetch
+---
+<p>{{APIRef("Fetch API")}}</p><p><span class="seoSummary">の<code><strong>fetch()</strong></code>メソッド</span>{{domxref("WindowOrWorkerGlobalScope")}}<span class="seoSummary">mixinは、ネットワークからリソースをフェッチするプロセスを開始し、応答が利用可能になると実行されるpromiseを返します。</span>約束はに解決されます{{domxref("Response")}}リクエストへの応答を表すオブジェクト。 promise<em>は</em>HTTPエラーで拒否し<em>ません</em>—ネットワークエラーでのみ拒否します。 <code>then</code>ハンドラーを使用してHTTPエラーをチェックする必要があります。</p><p> <code>WindowOrWorkerGlobalScope</code>は両方によって実装されています{{domxref("Window")}}そして{{domxref("WorkerGlobalScope")}}、つまり、 <code>fetch()</code>メソッドは、リソースをフェッチする可能性のあるほとんどすべてのコンテキストで使用できます。</p><p> A{{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}} promiseは、ネットワークエラーが発生した場合にのみ拒否します（通常、アクセス許可の問題などがある場合）。 A{{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}} promise<em>は</em>HTTPエラー（ <code>404</code>など）を拒否し<em>ません</em>。代わりに、 <code>then()</code>ハンドラーは{{domxref("Response.ok")}}および/または{{domxref("Response.status")}}プロパティ。</p><p> <code>fetch()</code>メソッドは、取得するリソースのディレクティブではなく、<a href="/en-US/docs/Security/CSP/CSP_policy_directives">コンテンツセキュリティポリシー</a>の<code>connect-src</code>ディレクティブによって制御されます。</p><div class="note"><p><strong>注</strong>： <code>fetch()</code>メソッドのパラメーターは、{{domxref("Request.Request","Request()")}}コンストラクタ。</p></div><h2 id="Syntax">構文</h2><pre class="syntaxbox notranslate">const <var>fetchResponsePromise</var> = fetch( <var>resource</var> [, <var>init</var> ])
+</pre><h3 id="Parameters">パラメーター</h3><dl><dt><code><var>resource</var></code></dt><dd>これにより、フェッチするリソースが定義されます。これは次のいずれかになります。<ul><li> A{{domxref("USVString")}}フェッチするリソースの直接URLが含まれています。一部のブラウザは、 <code>blob:</code>および<code>data:</code>スキームを受け入れます。</li><li> A{{domxref("Request")}}オブジェクト。</li></ul></dd><dt> <code><var>init</var></code>{{optional_inline}}</dt><dd><p>リクエストに適用するカスタム設定を含むオブジェクト。可能なオプションは次のとおりです。</p><dl><dt> <code>method</code></dt><dd>リクエストメソッド（例： <code>GET</code> 、 <code>POST</code> 。注意してください{{httpheader("Origin")}}ヘッダーは、次のメソッドを使用したフェッチ要求に設定されていません{{HTTPMethod("HEAD")}}または{{HTTPMethod("GET")}}。<br> （この動作はFirefox65で修正されました—を参照してください。{{bug(1508661)}} ）。</dd><dt> <code>headers</code></dt><dd>リクエストに追加するヘッダー。{{domxref("Headers")}}オブジェクトまたはオブジェクトリテラル{{domxref("ByteString")}}値。<a href="/en-US/docs/Glossary/Forbidden_header_name">一部の名前は禁止され</a>て<a href="/en-US/docs/Glossary/Forbidden_header_name">いる</a>ことに注意してください。</dd><dt> <code>body</code></dt><dd>リクエストに追加したい任意の本文：これは{{domxref("Blob")}}、{{domxref("BufferSource")}} 、{{domxref("FormData")}} 、{{domxref("URLSearchParams")}} 、{{domxref("USVString")}} 、または{{domxref("ReadableStream")}}オブジェクト。 <code>GET</code>または<code>HEAD</code>メソッドを使用するリクエストには本文を<code>HEAD</code>ことができないことに注意してください。</dd><dt> <code>mode</code></dt><dd>リクエストに使用するモード（例： <code>cors</code> 、 <code>no-cors</code> 、 <code>same-origin</code> 。</dd><dt> <code>credentials</code></dt><dd>リクエストに使用するリクエスト認証情報： <code>omit</code> 、 <code>same-origin</code> 、または<code>include</code> 。現在のドメインのCookieを自動的に送信するには、このオプションを指定する必要があります。 Chrome 50以降、このプロパティには{{domxref("FederatedCredential")}}インスタンスまたは{{domxref("PasswordCredential")}}インスタンス。</dd><dt> <code>cache</code></dt><dd>リクエストに使用する<a href="/en-US/docs/Web/API/Request/cache">キャッシュモード</a>。</dd><dt> <code>redirect</code></dt><dd>使用するリダイレクトモード： <code>follow</code> （リダイレクトを自動的にフォロー）、 <code>error</code> （リダイレクトが発生した場合にエラーで中止）、または<code>manual</code> （リダイレクトを手動で処理）。 Chromeでは、デフォルトは<code>follow</code>とおりです（Chrome 47より前はデフォルトで<code>manual</code>になってい<code>manual</code> ）。</dd><dt> <code>referrer</code></dt><dd> A{{domxref("USVString")}}リクエストのリファラーを指定します。これは、同一生成元URL、 <code>about:client</code> 、または空の文字列にすることができます。</dd><dt> <code>referrerPolicy</code></dt><dd>リクエストに使用する<a href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policies">リファラーポリシー</a>を指定し<a href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policies">ます</a>。 <code>no-referrer</code> 、 <code>no-referrer-when-downgrade</code> 、 <code>same-origin</code> 、 <code>origin</code> 、 <code>strict-origin</code> 、 <code>origin-when-cross-origin</code> 、 <code>strict-origin-when-cross-origin</code> 、 <code>unsafe-url</code>いずれかになります。</dd><dt> <code>integrity</code></dt><dd>リクエストの<code>sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=</code><a href="/en-US/docs/Web/Security/Subresource_Integrity">リソース整合性</a>値が含まれます（例： <code>sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=</code> ）。</dd><dt> <code>keepalive</code></dt><dd> <code>keepalive</code>オプションを使用すると、リクエストの寿命を延ばすことができます。 <code>keepalive</code>フラグ付きのフェッチは、{{domxref("Navigator.sendBeacon()")}} API。</dd><dt> <code>signal</code></dt><dd>アン{{domxref("AbortSignal")}}オブジェクトインスタンス;フェッチ要求と通信し、必要に応じて、{{domxref("AbortController")}} 。</dd></dl></dd></dl><h3 id="Return_value">戻り値</h3><p>A{{domxref("Promise")}}それはに解決します{{domxref("Response")}}オブジェクト。</p><h3 id="Exceptions">例外</h3><dl><dt><code>AbortError</code></dt><dd>の呼び出しが原因でリクエストが中止されました{{domxref("AbortController")}}方法{{domxref("AbortController.abort", "abort()")}}方法。</dd><dt> <code>TypeError</code></dt><dd>指定されたURL文字列には、ユーザー資格情報が含まれます。この情報は、代わりにを使用して提供する必要があります{{HTTPHeader("Authorization")}}ヘッダ。</dd></dl><h2 id="Examples">例</h2><p><a href="https://github.com/mdn/fetch-examples/tree/master/fetch-request">Fetch Requestの例</a>（ <a href="https://mdn.github.io/fetch-examples/fetch-request/">Fetch Request liveを</a>参照）では、新しいものを作成します{{domxref("Request")}}関連するコンストラクターを使用してオブジェクトを取得し、 <code>fetch()</code>呼び出しを使用してそれを<code>fetch()</code>ます。画像を取得しているので、実行します{{domxref("Body.blob()")}}応答で適切なMIMEタイプを指定して、適切に処理されるようにしてから、そのオブジェクトURLを作成し、{{htmlelement("img")}}素子。 </p><pre class="brush: js notranslate">const myImage = document.querySelector('img');
+
+let myRequest = new Request('flowers.jpg');
+
+fetch(myRequest)
+.then(function(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.blob();
+})
+.then(function(response) {
+  let objectURL = URL.createObjectURL(response);
+  myImage.src = objectURL;
+});</pre><p><a href="https://github.com/mdn/fetch-examples/blob/master/fetch-with-init-then-request/index.html">Fetch with init then Requestの例</a>（ <a href="https://mdn.github.io/fetch-examples/fetch-with-init-then-request/">Fetch Request init liveを</a>参照）では、 <code>fetch()</code>を呼び出すときに<code><var>init</var></code>オブジェクトを渡すことを除いて、同じことを行います。 </p><pre class="brush: js notranslate">const myImage = document.querySelector('img');
+
+let myHeaders = new Headers();
+myHeaders.append('Content-Type', 'image/jpeg');
+
+const myInit = {
+  method: 'GET',
+  headers: myHeaders,
+  mode: 'cors',
+  cache: 'default'
+};
+
+let myRequest = new Request('flowers.jpg');
+
+fetch(myRequest, myInit).then(function(response) {
+  // ...
+});</pre><p>同じ効果を得るために、 <code>Request</code>コンストラクターで<code><var>init</var></code>オブジェクトを渡すこともできます。 </p><pre class="brush: js notranslate">let myRequest = new Request('flowers.jpg', myInit);</pre><p> <code><var>init</var></code> <code>headers</code>としてオブジェクトリテラルを使用することもでき<code><var>init</var></code> 。 </p><pre class="brush: js notranslate">const myInit = {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'image/jpeg'
+  },
+  mode: 'cors',
+  cache: 'default'
+};
+
+let myRequest = new Request('flowers.jpg', myInit);
+</pre><h2 id="Specifications">仕様</h2><table class="standard-table"><thead><tr><th scope="col">仕様</th><th scope="col">状態</th><th scope="col">コメント</th></tr></thead><tbody><tr><td>{{SpecName('Fetch','#fetch-method','fetch()')}}</td><td>{{Spec2('Fetch')}}</td><td>最新の仕様の部分的な<code>WindowOrWorkerGlobalScope</code>定義されています。 </td></tr><tr><td>{{SpecName('Fetch','#dom-global-fetch','fetch()')}}</td><td>{{Spec2('Fetch')}}</td><td>初期定義</td></tr><tr><td>{{SpecName('Credential Management')}}</td><td>{{Spec2('Credential Management')}}</td><td>追加します{{domxref("FederatedCredential")}}または{{domxref("PasswordCredential")}}<code>init.credentials</code>可能な値としてのインスタンス。</td></tr></tbody></table><h2 id="Browser_compatibility">ブラウザの互換性</h2><p>{{Compat("api.WindowOrWorkerGlobalScope.fetch")}}</p><h2 id="See_also">も参照してください</h2><ul><li><a href="/en-US/docs/Web/API/Fetch_API">フェッチAPI</a></li><li> <a href="/en-US/docs/Web/API/ServiceWorker_API">ServiceWorker API</a></li><li> <a href="/en-US/docs/Web/HTTP/CORS">HTTPアクセス制御（CORS）</a></li><li> <a href="/en-US/docs/Web/HTTP">HTTP</a></li></ul>

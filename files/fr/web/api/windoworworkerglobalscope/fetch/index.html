@@ -1,0 +1,57 @@
+---
+title: WindowOrWorkerGlobalScope.fetch()
+slug: Web/API/WindowOrWorkerGlobalScope/fetch
+tags:
+  - API
+  - Experimental
+  - Fetch
+  - Fetch API
+  - GlobalFetch
+  - Method
+  - Reference
+  - WindowOrWorkerGlobalScope
+  - request
+translation_of: Web/API/WindowOrWorkerGlobalScope/fetch
+---
+<p>{{APIRef("Fetch API")}}</p><p><span class="seoSummary">La méthode <code><strong>fetch()</strong></code> du</span>{{domxref("WindowOrWorkerGlobalScope")}} <span class="seoSummary">mixin démarre le processus de récupération d&#39;une ressource du réseau, retournant une promesse qui est remplie une fois que la réponse est disponible.</span> La promesse se résout à la{{domxref("Response")}} objet représentant la réponse à votre demande. La promesse <em>ne</em> rejette <em>pas</em> les erreurs HTTP - elle ne rejette que les erreurs réseau. Vous devez utiliser les gestionnaires <code>then</code> pour vérifier les erreurs HTTP.</p><p> <code>WindowOrWorkerGlobalScope</code> est implémenté par les deux{{domxref("Window")}} et{{domxref("WorkerGlobalScope")}} , ce qui signifie que la méthode <code>fetch()</code> est disponible dans à peu près tous les contextes dans lesquels vous souhaitez récupérer des ressources.</p><p> UNE{{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}} Promise ne rejette que lorsqu&#39;une erreur réseau est rencontrée (ce qui est généralement le cas en cas de problème d&#39;autorisations ou similaire). UNE{{domxref("WindowOrWorkerGlobalScope.fetch","fetch()")}} promise <em>ne</em> rejette <em>pas</em> les erreurs HTTP ( <code>404</code> , etc.). Au lieu de cela, un gestionnaire <code>then()</code> doit vérifier le{{domxref("Response.ok")}} et / ou{{domxref("Response.status")}} Propriétés.</p><p> La méthode <code>fetch()</code> est contrôlée par la directive <code>connect-src</code> de <a href="/en-US/docs/Security/CSP/CSP_policy_directives">Content Security Policy</a> plutôt que par la directive des ressources qu&#39;elle récupère.</p><div class="note"><p> <strong>Remarque</strong> : les paramètres de la méthode <code>fetch()</code> sont identiques à ceux de la{{domxref("Request.Request","Request()")}} constructeur.</p></div><h2 id="Syntax"> Syntaxe </h2><pre class="syntaxbox notranslate">const <var>fetchResponsePromise</var> = fetch( <var>resource</var> [, <var>init</var> ])
+</pre><h3 id="Parameters">Paramètres</h3><dl><dt> <code><var>resource</var></code></dt><dd> Cela définit la ressource que vous souhaitez récupérer. Cela peut être soit:<ul><li> UNE{{domxref("USVString")}} contenant l&#39;URL directe de la ressource que vous souhaitez récupérer. Certains navigateurs acceptent les schémas <code>blob:</code> et <code>data:</code> :.</li><li> UNE{{domxref("Request")}} objet.</li></ul></dd><dt> <code><var>init</var></code>{{optional_inline}}</dt><dd><p> Un objet contenant tous les paramètres personnalisés que vous souhaitez appliquer à la demande. Les options possibles sont:</p><dl><dt> <code>method</code></dt><dd> La méthode de requête, par exemple, <code>GET</code> , <code>POST</code> . Notez que le{{httpheader("Origin")}} l&#39;en-tête n&#39;est pas défini sur les requêtes Fetch avec une méthode de{{HTTPMethod("HEAD")}} ou{{HTTPMethod("GET")}} .<br> (Ce comportement a été corrigé dans Firefox 65 - voir{{bug(1508661)}} ).</dd><dt> <code>headers</code></dt><dd> Tous les en-têtes que vous souhaitez ajouter à votre demande, contenus dans un{{domxref("Headers")}} objet ou un objet littéral avec{{domxref("ByteString")}} valeurs. Notez que <a href="/en-US/docs/Glossary/Forbidden_header_name">certains noms sont interdits</a> .</dd><dt> <code>body</code></dt><dd> Tout corps que vous souhaitez ajouter à votre demande: cela peut être un{{domxref("Blob")}} ,{{domxref("BufferSource")}} ,{{domxref("FormData")}} ,{{domxref("URLSearchParams")}} ,{{domxref("USVString")}} , ou{{domxref("ReadableStream")}} objet. Notez qu&#39;une requête utilisant la méthode <code>GET</code> ou <code>HEAD</code> ne peut pas avoir de corps.</dd><dt> <code>mode</code></dt><dd> Le mode que vous souhaitez utiliser pour la demande, par exemple, <code>cors</code> , <code>no-cors</code> ou <code>same-origin</code> .</dd><dt> <code>credentials</code></dt><dd> Les informations d&#39;identification de la demande que vous souhaitez utiliser pour la demande: <code>omit</code> , <code>same-origin</code> ou <code>include</code> . Pour envoyer automatiquement des cookies pour le domaine actuel, cette option doit être fournie. À partir de Chrome 50, cette propriété prend également un{{domxref("FederatedCredential")}} instance ou un{{domxref("PasswordCredential")}} exemple.</dd><dt> <code>cache</code></dt><dd> Le <a href="/en-US/docs/Web/API/Request/cache">mode de cache que</a> vous souhaitez utiliser pour la demande.</dd><dt> <code>redirect</code></dt><dd> Le mode de redirection à utiliser: <code>follow</code> ( <code>follow</code> automatiquement les redirections), <code>error</code> (abandonner avec une erreur si une redirection se produit) ou <code>manual</code> (gérer les redirections manuellement). Dans Chrome, la valeur par défaut est <code>follow</code> (avant Chrome 47, il était par défaut <code>manual</code> ).</dd><dt> <code>referrer</code></dt><dd> UNE{{domxref("USVString")}} en spécifiant le référent de la demande. Il peut s&#39;agir d&#39;une URL de même origine, <code>about:client</code> ou d&#39;une chaîne vide.</dd><dt> <code>referrerPolicy</code></dt><dd> Spécifie la <a href="https://w3c.github.io/webappsec-referrer-policy/#referrer-policies">stratégie de référent</a> à utiliser pour la demande. Il peut s&#39;agir de <code>no-referrer</code> , <code>no-referrer-when-downgrade</code> , <code>same-origin</code> , <code>origin</code> , <code>strict-origin</code> , <code>origin-when-cross-origin</code> , <code>strict-origin-when-cross-origin</code> , ou <code>unsafe-url</code> .</dd><dt> <code>integrity</code></dt><dd> Contient la valeur d&#39; <a href="/en-US/docs/Web/Security/Subresource_Integrity">intégrité</a> de la <code>sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=</code> de la demande (par exemple, <code>sha256-BpfBw7ivV8q2jLiT13fxDYAe2tJllusRSZ273h2nFSE=</code> ).</dd><dt> <code>keepalive</code></dt><dd> L&#39;option <code>keepalive</code> peut être utilisée pour permettre à la demande de survivre à la page. Fetch avec l&#39;indicateur <code>keepalive</code> remplace le{{domxref("Navigator.sendBeacon()")}} API.</dd><dt> <code>signal</code></dt><dd> Un{{domxref("AbortSignal")}} instance d&#39;objet; vous permet de communiquer avec une demande de récupération et de l&#39;abandonner si vous le souhaitez via un{{domxref("AbortController")}} .</dd></dl></dd></dl><h3 id="Return_value"> Valeur de retour</h3><p> UNE{{domxref("Promise")}} qui se résout à un{{domxref("Response")}} objet.</p><h3 id="Exceptions"> Des exceptions</h3><dl><dt> <code>AbortError</code></dt><dd> La demande a été abandonnée en raison d&#39;un appel au{{domxref("AbortController")}} méthode{{domxref("AbortController.abort", "abort()")}} méthode.</dd><dt> <code>TypeError</code></dt><dd> La chaîne URL spécifiée comprend les informations d&#39;identification de l&#39;utilisateur. Ces informations doivent plutôt être fournies à l&#39;aide d&#39;un{{HTTPHeader("Authorization")}} entête.</dd></dl><h2 id="Examples"> Exemples</h2><p> Dans notre <a href="https://github.com/mdn/fetch-examples/tree/master/fetch-request">exemple de demande de récupération</a> (voir <a href="https://mdn.github.io/fetch-examples/fetch-request/">Demande de récupération en direct</a> ), nous créons un nouveau{{domxref("Request")}} objet en utilisant le constructeur approprié, puis récupérez-le en utilisant un appel <code>fetch()</code> . Puisque nous récupérons une image, nous exécutons{{domxref("Body.blob()")}} sur la réponse pour lui donner le type MIME approprié afin qu&#39;il soit géré correctement, puis créez une URL d&#39;objet de celui-ci et affichez-le dans un{{htmlelement("img")}} élément. </p><pre class="brush: js notranslate">const myImage = document.querySelector('img');
+
+let myRequest = new Request('flowers.jpg');
+
+fetch(myRequest)
+.then(function(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.blob();
+})
+.then(function(response) {
+  let objectURL = URL.createObjectURL(response);
+  myImage.src = objectURL;
+});</pre><p> Dans l&#39;exemple<a href="https://github.com/mdn/fetch-examples/blob/master/fetch-with-init-then-request/index.html">Fetch with init then Request</a> (voir <a href="https://mdn.github.io/fetch-examples/fetch-with-init-then-request/">Fetch Request init live</a> ), nous faisons la même chose sauf que nous passons un objet <code><var>init</var></code> lorsque nous invoquons <code>fetch()</code> : </p><pre class="brush: js notranslate">const myImage = document.querySelector('img');
+
+let myHeaders = new Headers();
+myHeaders.append('Content-Type', 'image/jpeg');
+
+const myInit = {
+  method: 'GET',
+  headers: myHeaders,
+  mode: 'cors',
+  cache: 'default'
+};
+
+let myRequest = new Request('flowers.jpg');
+
+fetch(myRequest, myInit).then(function(response) {
+  // ...
+});</pre><p> Vous pouvez également passer l&#39;objet <code><var>init</var></code> avec le constructeur <code>Request</code> pour obtenir le même effet: </p><pre class="brush: js notranslate">let myRequest = new Request('flowers.jpg', myInit);</pre><p> Vous pouvez également utiliser un objet littéral comme en- <code>headers</code> dans <code><var>init</var></code> . </p><pre class="brush: js notranslate">const myInit = {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'image/jpeg'
+  },
+  mode: 'cors',
+  cache: 'default'
+};
+
+let myRequest = new Request('flowers.jpg', myInit);
+</pre><h2 id="Specifications">Caractéristiques</h2><table class="standard-table"><thead><tr><th scope="col"> spécification</th><th scope="col"> Statut</th><th scope="col"> Commentaire</th></tr></thead><tbody><tr><td>{{SpecName('Fetch','#fetch-method','fetch()')}}</td><td>{{Spec2('Fetch')}}</td><td> Défini dans un partiel <code>WindowOrWorkerGlobalScope</code> dans la dernière spécification. </td></tr><tr><td>{{SpecName('Fetch','#dom-global-fetch','fetch()')}}</td><td>{{Spec2('Fetch')}}</td><td> Définition initiale </td></tr><tr><td>{{SpecName('Credential Management')}}</td><td>{{Spec2('Credential Management')}}</td><td> Ajoute{{domxref("FederatedCredential")}} ou{{domxref("PasswordCredential")}} instance comme valeur possible pour <code>init.credentials</code> .</td></tr></tbody></table><h2 id="Browser_compatibility"> Compatibilité du navigateur</h2><p>{{Compat("api.WindowOrWorkerGlobalScope.fetch")}}</p><h2 id="See_also"> Voir également</h2><ul><li> <a href="/en-US/docs/Web/API/Fetch_API">Récupérer l&#39;API</a></li><li> <a href="/en-US/docs/Web/API/ServiceWorker_API">API ServiceWorker</a></li><li> <a href="/en-US/docs/Web/HTTP/CORS">Contrôle d&#39;accès HTTP (CORS)</a></li><li> <a href="/en-US/docs/Web/HTTP">HTTP</a></li></ul>

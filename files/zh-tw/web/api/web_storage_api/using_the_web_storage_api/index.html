@@ -1,0 +1,73 @@
+---
+title: Using the Web Storage API
+slug: Web/API/Web_Storage_API/Using_the_Web_Storage_API
+tags:
+  - API
+  - Guide
+  - Storage
+  - Web Storage API
+  - localStorage
+  - sessionStorage
+translation_of: Web/API/Web_Storage_API/Using_the_Web_Storage_API
+---
+<div>{{DefaultAPISidebar("Web Storage API")}}</div><p><span class="seoSummary">Web存儲API提供了一些機制，通過這些機制瀏覽器可以安全地存儲鍵/值對。</span></p><p>本文提供瞭如何利用此技術的演練。</p><h2 id="Basic_concepts">基本概念</h2><p>存儲對像是簡單的鍵值存儲，類似於對象，但是它們在頁面加載時保持完整。鍵和值始終是字符串（請注意，與對像一樣，整數鍵將自動轉換為字符串）。您可以像訪問對像一樣訪問這些值，也可以使用{{domxref("Storage.getItem()")}}和{{domxref("Storage.setItem()")}}方法。這三行都設置了（相同的）colorSetting條目：</p><pre class="brush: js" style="white-space: pre;"> localStorage.colorSetting =&#39;＃a4509b&#39;;
+localStorage [&#39;colorSetting&#39;] =&#39;＃a4509b&#39;;
+localStorage.setItem（&#39;colorSetting&#39;，&#39;＃a4509b&#39;）;</pre><div class="note"><p><strong>注意</strong>：建議使用Web存儲API（ <code>setItem</code> ， <code>getItem</code> ， <code>removeItem</code> ， <code>key</code> ， <code>length</code> ），以防止與將純對像用作鍵值存儲相關的<a href="http://www.2ality.com/2012/01/objects-as-maps.html">陷阱</a>。</p></div><p> Web存儲中的兩種機制如下：</p><ul><li> <strong><code>sessionStorage</code></strong>為每個給定的來源維護一個單獨的存儲區域，該存儲區域在頁面會話期間有效（只要瀏覽器處於打開狀態，包括頁面重新加載和還原）。</li><li> <strong><code>localStorage</code></strong>做同樣的事情，但是即使關閉並重新打開瀏覽器也可以保留。</li></ul><p>這些機制可以通過{{domxref("Window.sessionStorage")}}和{{domxref("Window.localStorage")}}屬性（更確切地說，在支持瀏覽器中， <code>Window</code>對象實現<code>WindowLocalStorage</code>和<code>WindowSessionStorage</code>對象，而<code>localStorage</code>和<code>sessionStorage</code>屬性是該對象的成員）–調用其中之一將創建以下對象的實例{{domxref("Storage")}}對象，通過它可以設置，檢索和刪除數據項。每個源的<code>sessionStorage</code>和<code>localStorage</code>使用不同的Storage對象-它們起作用並分別受到控制。</p><p>因此，例如，最初在文檔上調用<code>localStorage</code>將返回一個{{domxref("Storage")}}目的;在文檔上調用<code>sessionStorage</code>將返回不同的{{domxref("Storage")}}目的。可以以相同的方式，但分別地操作這兩個。</p><h2 id="Feature-detecting_localStorage">功能檢測localStorage</h2><p>為了能夠使用localStorage，我們應該首先驗證它是否在當前瀏覽會話中受支持並可用。</p><h3 id="Testing_for_availability">測試可用性</h3><div class="blockIndicator note"><p>注意：此API在所有主要瀏覽器的當前版本中可用。僅當必須支持非常舊的瀏覽器（例如Internet Explorer 6或7）或在以下所述的有限情況下，才需要測試可用性。</p></div><p>支持localStorage的瀏覽器在名為<code>localStorage</code>的窗口對像上具有一個屬性。但是，僅斷言該屬性存在可能會引發異常。如果<code>localStorage</code>對象確實存在，則仍然不能保證localStorage API實際可用，因為各種瀏覽器都提供了禁用localStorage的設置。因此，瀏覽器可能<em>支持</em>localStorage，但不適<em>用於</em>頁面上的腳本。</p><p>例如，私有瀏覽模式下的Safari瀏覽器為我們提供了一個空的localStorage對象，其配額為零，實際上使它無法使用。相反，我們可能會得到一個合法的<code>QuotaExceededError</code> ，這意味著我們已經用完了所有可用的存儲空間，而存儲<em>是</em>實際<em>可用</em>。我們的功能檢測應考慮這些情況。</p><p>這是一個檢測localStorage是否受支持和可用的函數：</p><pre class="brush: js">函數storageAvailable（type）{
+    var storage;
+    嘗試{
+        storage = window [type];
+        var x =&#39;__storage_test__&#39;;
+        storage.setItem（x，x）;
+        storage.removeItem（x）;
+        返回true；
+    }
+    抓住{e} {
+        返回DOMException &amp;&amp;（
+            // Firefox以外的所有內容
+            e.code === 22 ||
+            // Firefox
+            e.code === 1014 ||
+            //也測試名稱字段，因為可能不存在代碼
+            // Firefox以外的所有內容
+            e.name ===&#39;QuotaExceededError&#39;||
+            // Firefox
+            e.name ===&#39;NS_ERROR_DOM_QUOTA_REACHED&#39;）&amp;&amp;
+            //僅當已經存儲了某些內容時才確認QuotaExceededError
+            （存儲&amp;&amp; storage.length！== 0）;
+    }
+}</pre><p>這是您將如何使用它：</p><pre class="brush: js">如果（storageAvailable（&#39;localStorage&#39;））{
+  // Yippee！我們可以使用localStorage很棒
+}
+其他{
+  //太糟糕了，對我們而言沒有localStorage
+}</pre><p>您可以通過調用<code>storageAvailable(&#39;sessionStorage&#39;)</code>來測試sessionStorage。</p><p>請參閱此處，以<a href="https://gist.github.com/paulirish/5558557">了解功能檢測localStorage</a>的<a href="https://gist.github.com/paulirish/5558557">簡要歷史記錄</a>。</p><h2 id="Example">例</h2><p>為了說明一些典型的Web存儲用法，我們創建了一個示例，該示例富有想像力地稱為<strong>Web Storage Demo</strong> 。<a href="https://mdn.github.io/dom-examples/web-storage/">登陸頁面</a>提供了可用於自定義顏色，字體和裝飾性圖像的控件： </p><p><img alt="" src="https://mdn.mozillademos.org/files/9685/landing.png" style="display: block; height: 482px; margin: 0px auto; width: 700px;">當您選擇其他選項時，頁面將立即更新。此外，您的選擇存儲在<code>localStorage</code> ，因此，當您離開該頁面並再次加載它時，以後會記住您的選擇。</p><p>我們還提供了一個<a href="https://mdn.github.io/dom-examples/web-storage/event.html">事件輸出頁面</a>-如果您將此頁面加載到另一個標籤中，然後在登錄頁面中更改選擇，您將看到更新的存儲信息以{{domxref("StorageEvent")}}被解雇了。 </p><p><img alt="" src="https://mdn.mozillademos.org/files/9687/event-output.png" style="display: block; height: 482px; margin: 0px auto; width: 700px;"></p><div class="note"><p><strong>注意</strong>：除了使用上面的鏈接實時查看示例頁面之外，您還可以<a href="https://github.com/mdn/dom-examples/tree/master/web-storage">查看源代碼</a>。</p></div><h3 id="Testing_whether_your_storage_has_been_populated">測試您的存儲空間是否已填充</h3><p>首先，在<a href="https://github.com/mdn/dom-examples/blob/master/web-storage/main.js">main.js中</a>，我們測試存儲對像是否已被填充（即，該頁面先前已被訪問）：</p><pre class="brush: js"> if（！localStorage.getItem（&#39;bgcolor&#39;））{
+  populateStorage（）;
+}其他{
+  setStyles（）;
+}</pre><p>的{{domxref("Storage.getItem()")}}方法用於從存儲中獲取數據項；在這種情況下，我們正在測試以查看<code>bgcolor</code>項目是否存在；如果不是，我們運行<code>populateStorage()</code>將現有的自定義值添加到存儲中。如果那裡已經有值，我們運行<code>setStyles()</code>來使用存儲的值更新頁面樣式。</p><p><strong>注意</strong>：您也可以使用{{domxref("Storage.length")}}測試存儲對像是否為空。</p><h3 id="Getting_values_from_storage">從存儲中獲取價值</h3><p>如上所述，可以使用以下命令從存儲中檢索值{{domxref("Storage.getItem()")}}。這將數據項的鍵作為參數，並返回數據值。例如：</p><pre class="brush: js">函數setStyles（）{
+  var currentColor = localStorage.getItem（&#39;bgcolor&#39;）;
+  var currentFont = localStorage.getItem（&#39;font&#39;）;
+  var currentImage = localStorage.getItem（&#39;image&#39;）;
+
+  document.getElementById（&#39;bgcolor&#39;）。value = currentColor;
+  document.getElementById（&#39;font&#39;）。value = currentFont;
+  document.getElementById（&#39;image&#39;）。value = currentImage;
+
+  htmlElem.style.backgroundColor =&#39;＃&#39;+ currentColor;
+  pElem.style.fontFamily = currentFont;
+  imgElem.setAttribute（&#39;src&#39;，currentImage）;
+}</pre><p>在這裡，前三行從本地存儲中獲取值。接下來，我們將表單元素中顯示的值設置為這些值，以便在您重新加載頁面時它們保持同步。最後，我們更新頁面上的樣式/裝飾圖像，以便您的自定義選項在重新加載時再次出現。</p><h3 id="Setting_values_in_storage">設置存儲值</h3><p>{{domxref("Storage.setItem()")}}用於創建新的數據項，以及（如果數據項已存在）更新現有值。這需要兩個參數-要創建/修改的數據項的鍵以及要存儲在其中的值。</p><pre class="brush: js">函數populateStorage（）{
+  localStorage.setItem（&#39;bgcolor&#39;，document.getElementById（&#39;bgcolor&#39;）。value）;
+  localStorage.setItem（&#39;font&#39;，document.getElementById（&#39;font&#39;）。value）;
+  localStorage.setItem（&#39;image&#39;，document.getElementById（&#39;image&#39;）。value）;
+
+  setStyles（）;
+}</pre><p> <code>populateStorage()</code>函數在本地存儲中設置三個項目-背景顏色，字體和圖像路徑。然後，它運行<code>setStyles()</code>函數以更新頁面樣式等。</p><p>我們還在每個表單元素上包括一個<code>onchange</code>處理程序，以便每當更改表單值時都會更新數據和样式：</p><pre class="brush: js"> bgcolorForm.onchange = populateStorage;
+fontForm.onchange = populateStorage;
+imageForm.onchange = populateStorage;</pre><h3 id="Responding_to_storage_changes_with_the_StorageEvent">使用StorageEvent響應存儲更改</h3><p>的{{domxref("StorageEvent")}}每當更改{{domxref("Storage")}}對象（請注意，不會針對sessionStorage更改觸發此事件）。這不會在進行更改的同一頁面上起作用–實際上，這是域中其他頁面使用存儲來同步所做的任何更改的一種方式。其他域上的頁面無法訪問相同的存儲對象。</p><p>在事件頁面（請參閱<a href="https://github.com/mdn/dom-examples/blob/master/web-storage/event.js">events.js</a> ）上，唯一的JavaScript如下：</p><pre class="brush: js"> window.addEventListener（&#39;storage&#39;，function（e）{
+  document.querySelector（&#39;。my-key&#39;）。textContent = e.key;
+  document.querySelector（&#39;。my-old&#39;）。textContent = e.oldValue;
+  document.querySelector（&#39;。my-new&#39;）。textContent = e.newValue;
+  document.querySelector（&#39;。my-url&#39;）。textContent = e.url;
+  document.querySelector（&#39;。my-storage&#39;）。textContent = JSON.stringify（e.storageArea）;
+}）;</pre><p>在這裡，我們將事件偵聽器添加到<code>window</code>對象，當{{domxref("Storage")}}與當前原點關聯的對像已更改。正如您在上面看到的，與此事件關聯的事件對象具有許多包含有用信息的屬性-更改數據的鍵，更改前的舊值，更改後的新值，文檔的URL更改了存儲以及存儲對象本身（我們已經對其進行了字符串分類，以便您可以查看其內容）。</p><h3 id="Deleting_data_records">刪除數據記錄</h3><p>Web存儲還提供了幾種簡單的方法來刪除數據。我們不在演示中使用這些，但是將它們添加到您的項目中非常簡單：</p><ul><li>{{domxref("Storage.removeItem()")}}接受一個參數（要刪除的數據項的鍵），並將其從該域的存儲對像中刪除。</li><li>{{domxref("Storage.clear()")}}不帶任何參數，僅清空該域的整個存儲對象。</li></ul><h2 id="Specifications">技術指標</h2><table class="standard-table"><thead><tr><th scope="col">規範</th><th scope="col">狀態</th><th scope="col">評論</th></tr></thead><tbody><tr><td>{{SpecName('HTML WHATWG', 'webstorage.html#webstorage')}}</td><td>{{Spec2('HTML WHATWG')}}</td><td></td></tr></tbody></table><h2 id="Browser_compatibility">瀏覽器兼容性</h2><h3 id="Window.localStorage"><code>Window.localStorage</code></h3><div><p>{{Compat("api.Window.localStorage")}}</p><h3 id="Window.sessionStorage"> <code>Window.sessionStorage</code></h3><div><div class="hidden">此頁面上的兼容性表是根據結構化數據生成的。如果您想貢獻數據，請查看<a href="https://github.com/mdn/browser-compat-data">https://github.com/mdn/browser-compat-data</a>並向我們發送請求請求。</div><p>{{Compat("api.Window.sessionStorage")}}</p></div></div><p>所有瀏覽器的localStorage和sessionStorage都有不同的容量級別。這是<a class="external" href="http://dev-test.nemikor.com/web-storage/support-test/" title="http://dev-test.nemikor.com/web-storage/support-test/">各種瀏覽器的所有存儲容量</a>的<a class="external" href="http://dev-test.nemikor.com/web-storage/support-test/" title="http://dev-test.nemikor.com/web-storage/support-test/">詳細清單</a>。</p><h2 id="See_also">也可以看看</h2><ul><li><a href="/en-US/docs/Web/API/Web_Storage_API">Web Storage API登陸頁面</a></li></ul>
