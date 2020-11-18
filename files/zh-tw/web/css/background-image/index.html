@@ -1,0 +1,41 @@
+---
+title: background-image
+slug: Web/CSS/background-image
+tags:
+  - CSS
+  - CSS Background
+  - CSS Property
+  - Reference
+  - 'recipe:css-property'
+translation_of: Web/CSS/background-image
+---
+<p>{{CSSRef}}</p><p><strong><code>background-image</code></strong> <a href="/en-US/docs/Web/CSS">CSS</a>屬性在一個元素上設置一個或多個背景圖像。 </p><div>{{EmbedInteractiveExample("pages/css/background-image.html")}}</div><div class="hidden">該交互式示例的源代碼存儲在GitHub存儲庫中。如果您想為交互式示例項目做出貢獻，請克隆<a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a>並向我們發送請求請求。</div><p>背景圖像是在彼此堆疊的上下文圖層上繪製的。指定的第一層將被繪製為最接近用戶。</p><p>然後，將元素的<a href="/en-US/docs/Web/CSS/border">邊界</a>繪製在它們的頂部，然後{{cssxref("background-color")}}被畫在他們下面。圖像相對於框及其邊框的繪製方式由{{cssxref("background-clip")}}和{{cssxref("background-origin")}}CSS屬性。</p><p>如果無法繪製指定的圖像（例如，當無法加載由指定URI表示的文件時），瀏覽器將按照<code>none</code>值進行處理。</p><div class="note"><strong>注意：</strong>即使圖片不透明並且在正常情況下也不會顯示顏色，Web開發人員也應始終指定一個{{cssxref("background-color")}}。如果無法加載圖像（例如，當網絡中斷時），背景顏色將用作後備。</div><h2 id="Syntax">句法</h2><p>每個背景圖片都指定為關鍵字<code><a href="#none">none</a></code>或{{cssxref("&lt;image&gt;")}}值。</p><p>要指定多個背景圖像，請提供多個值，以逗號分隔： </p><pre class="brush: css no-line-numbers notranslate">background-image:
+  linear-gradient(to bottom, rgba(255,255,0,0.5), rgba(0,0,255,0.5)),
+  url('https://mdn.mozillademos.org/files/7693/catfront.png');</pre><h3 id="Values">價值觀</h3><dl><dt id="none"><code>none</code></dt><dd>是表示沒有圖像的關鍵字。</dd><dt id="image"> <code>&lt;image&gt;</code></dt><dd>是一個{{cssxref("&lt;image&gt;")}}表示要顯示的圖像。由於支持<a href="/en-US/docs/Web/Guide/CSS/Using_multiple_backgrounds">多個背景</a>，因此可以有多個，中間用逗號分隔。</dd></dl><h2 id="Accessibility_concerns">無障礙問題</h2><p>瀏覽器不向輔助技術提供有關背景圖像的任何特殊信息。這主要對屏幕閱讀器很重要，因為屏幕閱讀器不會宣布其存在，因此不會向用戶傳達任何信息。如果圖像包含對於理解頁面的總體目的至關重要的信息，則最好在文檔中進行語義描述。</p><ul><li> <a href="/en-US/docs/Web/Accessibility/Understanding_WCAG/Perceivable#Guideline_1.1_%E2%80%94_Providing_text_alternatives_for_non-text_content">MDN了解WCAG，準則1.1的說明</a></li><li><a href="https://www.w3.org/TR/2016/NOTE-UNDERSTANDING-WCAG20-20161007/text-equiv-all.html">了解成功標準1.1.1 | W3C了解WCAG 2.0</a></li></ul><h2 id="Formal_definition">正式定義</h2><p>{{cssinfo}}</p><h2 id="Formal_syntax">形式語法</h2><pre class="syntaxbox notranslate">{{csssyntax}}</pre><h2 id="Examples">例子</h2><h3 id="Layering_background_images">分層背景圖片</h3><p>請注意，星形圖像是部分透明的，並且位於貓圖像上。</p><h4 id="HTML">的HTML </h4><pre class="brush: html notranslate">&lt;div&gt;
+  &lt;p class="catsandstars"&gt;
+    This paragraph is full of cats&lt;br /&gt;and stars.
+  &lt;/p&gt;
+  &lt;p&gt;This paragraph is not.&lt;/p&gt;
+  &lt;p class="catsandstars"&gt;
+    Here are more cats for you.&lt;br /&gt;Look at them!
+  &lt;/p&gt;
+  &lt;p&gt;And no more.&lt;/p&gt;
+&lt;/div&gt;</pre><h4 id="CSS">的CSS </h4><pre class="brush: css notranslate">p {
+  font-size: 1.5em;
+  color: #FE7F88;
+  background-image: none;
+  background-color: transparent;
+}
+
+div {
+  background-image:
+      url("https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png");
+}
+
+.catsandstars {
+  background-image:
+      url("https://mdn.mozillademos.org/files/11991/startransparent.gif"),
+      url("https://mdn.mozillademos.org/files/7693/catfront.png");
+  background-color: transparent;
+}
+</pre><h4 id="Result">結果</h4><p>{{EmbedLiveSample('Layering_background_images')}}</p><h2 id="Specifications">技術指標</h2><table class="standard-table"><thead><tr><th scope="col">規範</th><th scope="col">狀態</th><th scope="col">評論</th></tr></thead><tbody><tr><td>{{SpecName('CSS3 Backgrounds', '#background-image', 'background-image')}}</td><td>{{Spec2('CSS3 Backgrounds')}}</td><td>從CSS2修訂版1開始，該屬性已擴展為支持多個背景以及任何{{cssxref("&lt;image&gt;")}}CSS數據類型。 </td></tr><tr><td>{{SpecName('CSS2.1', 'colors.html#propdef-background-image', 'background-image')}}</td><td>{{Spec2('CSS2.1')}}</td><td>現在，從CSS1開始，介紹處理具有和沒有固有尺寸的圖像的方式。 </td></tr><tr><td>{{SpecName('CSS1', '#background-image', 'background-image')}}</td><td>{{Spec2('CSS1')}}</td><td>初始定義。</td></tr></tbody></table><h2 id="Browser_compatibility">瀏覽器兼容性</h2><div>{{Compat("css.properties.background-image")}}</div><h2 id="See_also">也可以看看</h2><ul><li><a href="/en-US/docs/Web/Guide/CSS/CSS_Image_Sprites">在CSS中實現圖片精靈</a></li><li>{{HTMLElement("img")}}</li><li>與圖像有關的數據類型：{{cssxref("&lt;image&gt;")}} ，{{cssxref("&lt;gradient&gt;")}}</li><li>圖像相關功能： <ul><li>{{cssxref("cross-fade")}}</li><li>{{cssxref("element")}}</li><li>{{cssxref("imagefunction", "image()")}}</li><li>{{cssxref("image-set")}}</li><li>{{cssxref("linear-gradient")}}</li><li>{{cssxref("radial-gradient")}}</li><li>{{cssxref("repeating-linear-gradient")}}</li><li>{{cssxref("repeating-radial-gradient")}}</li><li>{{cssxref("paint")}}</li><li>{{cssxref("url", "url()")}}</li></ul></li></ul>

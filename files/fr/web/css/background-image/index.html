@@ -1,0 +1,41 @@
+---
+title: background-image
+slug: Web/CSS/background-image
+tags:
+  - CSS
+  - CSS Background
+  - CSS Property
+  - Reference
+  - 'recipe:css-property'
+translation_of: Web/CSS/background-image
+---
+<p>{{CSSRef}}</p><p>La propriété <a href="/en-US/docs/Web/CSS">CSS</a> <strong><code>background-image</code></strong> définit une ou plusieurs images d&#39;arrière-plan sur un élément. </p><div>{{EmbedInteractiveExample("pages/css/background-image.html")}}</div><div class="hidden"> La source de cet exemple interactif est stockée dans un référentiel GitHub. Si vous souhaitez contribuer au projet d&#39;exemples interactifs, veuillez cloner <a href="https://github.com/mdn/interactive-examples">https://github.com/mdn/interactive-examples</a> et nous envoyer une pull request.</div><p> Les images d&#39;arrière-plan sont dessinées sur des couches de contexte empilées les unes sur les autres. Le premier calque spécifié est dessiné comme s&#39;il était le plus proche de l&#39;utilisateur.</p><p> Les <a href="/en-US/docs/Web/CSS/border">bordures</a> de l&#39;élément sont ensuite dessinées au-dessus d&#39;eux, et le{{cssxref("background-color")}} est dessiné sous eux. La façon dont les images sont dessinées par rapport à la boîte et à ses bordures est définie par le{{cssxref("background-clip")}} et{{cssxref("background-origin")}} Propriétés CSS.</p><p> Si une image spécifiée ne peut pas être dessinée (par exemple, lorsque le fichier indiqué par l&#39;URI spécifié ne peut pas être chargé), les navigateurs la traitent comme ils le feraient avec une valeur <code>none</code> .</p><div class="note"> <strong>Remarque:</strong> même si les images sont opaques et que la couleur ne s&#39;affiche pas dans des circonstances normales, les développeurs Web doivent toujours spécifier un{{cssxref("background-color")}} . Si les images ne peuvent pas être chargées - par exemple, lorsque le réseau est en panne - la couleur d&#39;arrière-plan sera utilisée comme solution de secours.</div><h2 id="Syntax"> Syntaxe</h2><p> Chaque image d&#39;arrière-plan est spécifiée soit comme mot-clé <code><a href="#none">none</a></code> soit comme{{cssxref("&lt;image&gt;")}} valeur.</p><p> Pour spécifier plusieurs images d&#39;arrière-plan, indiquez plusieurs valeurs, séparées par une virgule: </p><pre class="brush: css no-line-numbers notranslate">background-image:
+  linear-gradient(to bottom, rgba(255,255,0,0.5), rgba(0,0,255,0.5)),
+  url('https://mdn.mozillademos.org/files/7693/catfront.png');</pre><h3 id="Values"> Valeurs</h3><dl><dt id="none"> <code>none</code></dt><dd> Est un mot clé dénotant l&#39;absence d&#39;images.</dd><dt id="image"> <code>&lt;image&gt;</code></dt><dd> Est un{{cssxref("&lt;image&gt;")}} indiquant l&#39;image à afficher. Il peut y en avoir plusieurs, séparés par des virgules, car <a href="/en-US/docs/Web/Guide/CSS/Using_multiple_backgrounds">plusieurs arrière</a> - <a href="/en-US/docs/Web/Guide/CSS/Using_multiple_backgrounds">plans</a> sont pris en charge.</dd></dl><h2 id="Accessibility_concerns"> Problèmes d&#39;accessibilité</h2><p> Les navigateurs ne fournissent aucune information particulière sur les images d&#39;arrière-plan aux technologies d&#39;assistance. Ceci est important avant tout pour les lecteurs d&#39;écran, car un lecteur d&#39;écran n&#39;annoncera pas sa présence et ne transmettra donc rien à ses utilisateurs. Si l&#39;image contient des informations essentielles pour comprendre l&#39;objectif général de la page, il est préférable de la décrire sémantiquement dans le document.</p><ul><li> <a href="/en-US/docs/Web/Accessibility/Understanding_WCAG/Perceivable#Guideline_1.1_%E2%80%94_Providing_text_alternatives_for_non-text_content">MDN Comprendre les WCAG, explications de la directive 1.1</a></li><li> <a href="https://www.w3.org/TR/2016/NOTE-UNDERSTANDING-WCAG20-20161007/text-equiv-all.html">Comprendre le critère de succès 1.1.1 | W3C Comprendre les WCAG 2.0</a></li></ul><h2 id="Formal_definition"> Définition formelle</h2><p>{{cssinfo}}</p><h2 id="Formal_syntax"> Syntaxe formelle</h2><pre class="syntaxbox notranslate">{{csssyntax}}</pre><h2 id="Examples"> Exemples</h2><h3 id="Layering_background_images"> Superposition d&#39;images d&#39;arrière-plan</h3><p> Notez que l&#39;image de l&#39;étoile est partiellement transparente et est superposée à l&#39;image du chat.</p><h4 id="HTML"> HTML </h4><pre class="brush: html notranslate">&lt;div&gt;
+  &lt;p class="catsandstars"&gt;
+    This paragraph is full of cats&lt;br /&gt;and stars.
+  &lt;/p&gt;
+  &lt;p&gt;This paragraph is not.&lt;/p&gt;
+  &lt;p class="catsandstars"&gt;
+    Here are more cats for you.&lt;br /&gt;Look at them!
+  &lt;/p&gt;
+  &lt;p&gt;And no more.&lt;/p&gt;
+&lt;/div&gt;</pre><h4 id="CSS"> CSS </h4><pre class="brush: css notranslate">p {
+  font-size: 1.5em;
+  color: #FE7F88;
+  background-image: none;
+  background-color: transparent;
+}
+
+div {
+  background-image:
+      url("https://mdn.mozillademos.org/files/6457/mdn_logo_only_color.png");
+}
+
+.catsandstars {
+  background-image:
+      url("https://mdn.mozillademos.org/files/11991/startransparent.gif"),
+      url("https://mdn.mozillademos.org/files/7693/catfront.png");
+  background-color: transparent;
+}
+</pre><h4 id="Result">Résultat</h4><p>{{EmbedLiveSample('Layering_background_images')}}</p><h2 id="Specifications">Caractéristiques</h2><table class="standard-table"><thead><tr><th scope="col"> spécification</th><th scope="col"> Statut</th><th scope="col"> Commentaire </th></tr></thead><tbody><tr><td>{{SpecName('CSS3 Backgrounds', '#background-image', 'background-image')}}</td><td>{{Spec2('CSS3 Backgrounds')}}</td><td> Depuis la révision 1 de CSS2, la propriété a été étendue pour prendre en charge plusieurs arrière-plans et{{cssxref("&lt;image&gt;")}} Type de données CSS. </td></tr><tr><td>{{SpecName('CSS2.1', 'colors.html#propdef-background-image', 'background-image')}}</td><td>{{Spec2('CSS2.1')}}</td><td> À partir de CSS1, la manière dont les images avec et sans dimensions intrinsèques sont gérées est maintenant décrite. </td></tr><tr><td>{{SpecName('CSS1', '#background-image', 'background-image')}}</td><td>{{Spec2('CSS1')}}</td><td> Définition initiale.</td></tr></tbody></table><h2 id="Browser_compatibility"> Compatibilité du navigateur</h2><div>{{Compat("css.properties.background-image")}}</div><h2 id="See_also"> Voir également</h2><ul><li> <a href="/en-US/docs/Web/Guide/CSS/CSS_Image_Sprites">Implémentation de sprites d&#39;image en CSS</a></li><li>{{HTMLElement("img")}}</li><li> Types de données liés à l&#39;image:{{cssxref("&lt;image&gt;")}} ,{{cssxref("&lt;gradient&gt;")}}</li><li> Fonctions liées à l&#39;image: <ul><li>{{cssxref("cross-fade")}}</li><li>{{cssxref("element")}}</li><li>{{cssxref("imagefunction", "image()")}}</li><li>{{cssxref("image-set")}}</li><li>{{cssxref("linear-gradient")}}</li><li>{{cssxref("radial-gradient")}}</li><li>{{cssxref("repeating-linear-gradient")}}</li><li>{{cssxref("repeating-radial-gradient")}}</li><li>{{cssxref("paint")}}</li><li>{{cssxref("url", "url()")}}</li></ul></li></ul>
